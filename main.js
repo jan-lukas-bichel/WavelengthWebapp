@@ -8,6 +8,7 @@ function log(req, res, next){
     console.log(req)
 }
 
+;
 app.use(bodyParser.urlencoded())
 app.use(express.static("public"));
 app.use("/test", log);
