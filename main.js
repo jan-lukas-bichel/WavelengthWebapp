@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
-function log(req, res, next){
+function log(req, res, next) {
     //console.log(parseInt(req.body.fname) + 1);
     res.send("danke" + parseInt(req.body));
     console.log(req)
