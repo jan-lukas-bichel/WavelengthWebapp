@@ -1,7 +1,7 @@
-module.exports = function (app) {
-    app.use('/game/new', newGame);
-    app.use('/game/logout', getNewNumber);
-}
+const express = require('express');
+const router = express.Router();
+
+router.use('/new', createGame);
 
 function joinGame(req, res, next) {
     // checken ob schon eine Runde läuft, wenn ja die anfrage ignorieren (später evtl. anderes handling, wie zB spectating)
@@ -64,3 +64,6 @@ function confirmNumber(req, res, next) {
     // Eventuell das Gewinnerteam bestimmen, Spiel serverseitig als beendet erklären
     // Sonst neue Skala und neue Nummer und neuen Spieler zum Ausdenken des Wortes festlegen
 }
+
+module.exports = router;
+
