@@ -8,7 +8,33 @@ function log(req, res, next) {
     console.log(req)
 }
 
-app.use(bodyParser.urlencoded())
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded())
+app.use((req, res, next) => {
+    // if req is nicht erlaubt
+    // dann respond with error
+    // else
+    // next()
+})
 app.use("/test", log);
 app.listen(3000, () => console.log("listening at 3000"));
+
+
+require('./modules/user')(app);
+require('./modules/game')(app);
+
+{
+    routes: [
+        {
+            path: '/user'
+            module: require('./modules/user')
+            subroutes: [
+                path: '/new',
+
+            ]
+        }, // user
+        {
+
+        } // game
+    ]
+}
