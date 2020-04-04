@@ -1,9 +1,9 @@
 # TODO LIST
 
-* know your tech (check)
-* REST-API definieren
-* Server entwickeln
-* Client entwickeln
+* [X] know your tech
+* [ ] REST-API definieren
+* [ ] Server entwickeln
+* [ ] Client entwickeln
 
 ```ASCIIART
                          |
