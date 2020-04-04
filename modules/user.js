@@ -1,14 +1,16 @@
-module.exports = function (app) {
-    // gültige nutzer-id
-    app.use('/user/new', createUser);
-    app.use('/user/logout', logoutUser);
-}
+const express = require('express');
+const router = express.Router();
+
+router.use('/new', createUser);
+router.use('/logout', logoutUser);
 
 
-function createUser(req, res, next) {
+function createUser(req, res) {
     // user erstellen
 }
 
-function logoutUser(req, res, next) {
+function logoutUser(req, res) {
     // user erstellen
 }
+
+module.exports = router;

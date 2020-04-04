@@ -19,10 +19,10 @@ app.use((req, res, next) => {
 app.use("/test", log);
 app.listen(3000, () => console.log("listening at 3000"));
 
+app.use('/user', require('./modules/user'));
+app.use('/game', require('./modules/game'));
 
-require('./modules/user')(app);
-require('./modules/game')(app);
-
+/*
 {
     routes: [
         {
@@ -38,3 +38,4 @@ require('./modules/game')(app);
         } // game
     ]
 }
+*/

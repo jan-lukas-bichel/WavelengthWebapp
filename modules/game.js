@@ -1,12 +1,10 @@
-module.exports = function (app) {
-    app.use('/game/new', createGame);
-    app.use('/game/logout', logoutGame);
+const express = require('express');
+const router = express.Router();
+
+router.use('/new', createGame);
+
+function createGame(req, res) {
+    // game erstellen
 }
 
-function createGame(req, res, next) {
-    // user erstellen
-}
-
-function logoutGame(req, res, next) {
-    // user erstellen
-}
+module.exports = router;
