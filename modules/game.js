@@ -50,18 +50,19 @@ function generateID(idLength) { // TO DO: Ganze Funktion austauschen
 }
 
 function joinGame(req, res, next) {
-    const reqID = 0; // TO DO: player ID aus dem request Header lesen und zuweisen
-
     if (gameInProgress) {
         return;
     }
-    else if (playerIndexByID(reqID) >= 0) {
+    else if (playerIndexByID(req.ID) >= 0) {
         return;
     }
     else {
-        players.push = { id: generateID(IDLength), name: "", team: 0 };
+        player = { id: generateID(IDLength), name: "", team: 0 };
+        players.push = player;
+        res.json(player);
     }
 }
+
 
 function setName(req, res, next) {
     const newName = ""; // TO DO: neuen Namen aus der Request lesen
@@ -76,6 +77,7 @@ function setName(req, res, next) {
     }
     players[playerIndex][name] = newName; // <- Keine Ahnung ob diese Syntax richtig ist
 }
+
 
 function startGame(req, res, next) {
     // checken ob schon eine Runde läuft, wenn ja die anfrage ignorieren
