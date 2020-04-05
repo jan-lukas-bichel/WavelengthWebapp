@@ -21,21 +21,3 @@ app.listen(3000, () => console.log("listening at 3000\nhttp://localhost:3000/"))
 
 app.use('/user', require('./modules/user'));
 app.use('/game', require('./modules/game'));
-
-/*
-{
-    routes: [
-        {
-            path: '/user'
-            module: require('./modules/user')
-            subroutes: [
-                path: '/new',
-
-            ]
-        }, // user
-        {
-
-        } // game
-    ]
-}
-*/
