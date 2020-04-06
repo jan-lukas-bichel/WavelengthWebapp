@@ -19,19 +19,20 @@ const gameInProgress = false;
 
 // Gibt den Index eines Spielers aus dem Players-Array anhand der ID zurück. Wenn kein Spieler mit der ID existiert, wird -1 zurückgegeben.
 function playerIndexByID(ID) {
-    indexNumber = 0;
+    players.map(p => p.id).indexOf(ID);
+    // indexNumber = 0;
 
-    players.forEach(player => {
-        if (player.id == ID) {
-            return indexNumber;
-        }
-        else if (indexNumber == players.length) {
-            return -1;
-        }
-        else {
-            indexNumber += 1;
-        }
-    });
+    // players.forEach(player => {
+    //     if (player.id == ID) {
+    //         return indexNumber;
+    //     }
+    //     else if (indexNumber == players.length) {
+    //         return -1;
+    //     }
+    //     else {
+    //         indexNumber += 1;
+    //     }
+    // });
 }
 
 
