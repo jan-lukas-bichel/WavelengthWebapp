@@ -59,7 +59,7 @@ function joinGame(req, res, next) {
     }
     else {
         player = { id: generateID(IDLength), name: "", team: 0 };
-        players.push = player;
+        players.push(player);
         res.json(player);
     }
 }
@@ -71,12 +71,13 @@ function setName(req, res, next) {
     const playerIndex = playerIndexByID(reqID);
 
     if (gameInProgress) {
+        // response senden
         return;
     }
     if (playerIndex < 0) {
         // joinGame(req, res, next); <- funktioniert das so?
     }
-    players[playerIndex][name] = newName; // <- Keine Ahnung ob diese Syntax richtig ist
+    players[playerIndex][name] = newName;
 }
 
 

@@ -10,7 +10,5 @@ app.use(express.static("vue_app/public/old_index.html"));
     // else
     next()
 })*/
-
-//app.use("/game/join", joinGame);
 app.use('/game', require('./modules/game'));
 app.listen(3000, () => console.log("listening at 3000\nhttp://localhost:3000/"));
