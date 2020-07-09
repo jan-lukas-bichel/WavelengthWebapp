@@ -1,11 +1,20 @@
 <template>
   <div id="app">
+    <Header />
     <router-view/>
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <p>git test</p>
   </div>
 </template>
+
+<script>
+import Header from './components/layout/Header';
+export default {
+  name:"app",
+  components: {
+    Header
+  }
+}
+</script>
+
 
 <style>
 #app {
