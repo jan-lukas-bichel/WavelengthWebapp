@@ -7,7 +7,7 @@
           <h1 class="my-10">Choose your Scale</h1>
         </v-row>
         <v-row align="center" justify="center">
-          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false" >Option 1</v-btn>
+          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false">Option 1</v-btn>
           <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false">Option 2</v-btn>
         </v-row>
       </v-container>
@@ -20,7 +20,12 @@
           <v-row>
             <v-col>
               <v-text-field background-color="green" label="Input your word" solo></v-text-field>
-              <v-btn class="mx-8" x-large color="success" @click="chooseWordOverlay = false" >Enter Word</v-btn>
+              <v-btn
+                class="mx-8"
+                x-large
+                color="success"
+                @click="chooseWordOverlay = false"
+              >Enter Word</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -34,9 +39,9 @@
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>On a Scale of Ten</v-toolbar-title>
+                <v-toolbar-title>The word is: {{this.theWord}}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn depressed color="green">Confirm your Choice</v-btn>
+                <v-btn v-on:click.prevent="requestWord"  depressed color="green">Confirm your Choice</v-btn>
               </v-toolbar>
               <v-card-text>
                 <v-icon>mdi-account</v-icon>
@@ -60,16 +65,29 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios';
 
-  data: () => ({
-    chooseScaleOverlay: true,
+export default {
+  data() {
+    return {
+      chooseScaleOverlay: true,
     chooseWordOverlay: true,
-    guess: 50
-  }),
+    guess: 50,
+    theWord: ""
+    }
+  },
 
   props: {
     source: String
+  },
+
+  methods: {
+    requestWord() {
+      axios
+        .get(`http://localhost:8080/api/game/word`)
+        .then(res => this.theWord = res.data.word)
+        .catch(err => console.log(err));
+    }
   }
 };
 </script>

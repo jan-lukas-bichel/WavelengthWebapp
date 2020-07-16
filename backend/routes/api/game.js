@@ -104,6 +104,8 @@ function setNewWord(req, res, next) {
 
 function getWord(req, res, next) {
     // Festgelegtes Wort der Runde zurückgeben
+    res.json({word: "flubbelbub"});
+    next();
 }
 
 function getScale(req, res, next) {

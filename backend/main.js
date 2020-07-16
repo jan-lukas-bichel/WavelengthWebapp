@@ -1,8 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const port = 3000;
 
-app.use(express.static("vue_app/public/old_index.html"));
+
 // app.use(bodyParser.urlencoded({ extended: true }))
 /*app.use((req, res, next) => {
     // if req is nicht erlaubt
@@ -10,5 +11,6 @@ app.use(express.static("vue_app/public/old_index.html"));
     // else
     next()
 })*/
-app.use('/game', require('./modules/game'));
-app.listen(3000, () => console.log("listening at 3000\nhttp://localhost:3000/"));
+app.use('/api/game', require('./routes/api/game'));
+//app.use(express.static("public"));
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
