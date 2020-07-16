@@ -24,7 +24,7 @@ const scaleTwoIndex = 0;
 //Array of all the available scales
 const scalesList = [["Good person", "Bad person"], ["Overrated letter of the alphabet", "Underrated letter of the alphabet"], ["Solid", "Fragile"]];
 
-//Index of the Scale chosen bz the psychic
+//Index of the Scale chosen by the psychic
 const chosenScaleIndex = 0;
 
 //The number on the scale, that gets randomly set
