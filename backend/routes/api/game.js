@@ -1,134 +1,133 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/join', joinGame);
-router.use('/newGame', startGame);
-router.use('/name', setName);
-router.use('/number', getNumber);
-router.use('/newWord', setNewWord);
-router.use('/word', getWord);
-router.use('/scale', getScale);
-router.use('/scores', getScores);
-router.use('/players', getPlayers);
-router.use('/answer', confirmAnswer);
+router.use('/getNumber', getNumber);
+router.use('/setWord', setNewWord);
+router.use('/getWord', getWord);
+router.use('/getScaleChoice', getScaleChoice);
+router.use('/setScaleChoice', setScale);
+router.use('/getScale', getScale);
+router.use('/setGuess', setGuess);
+router.use('/getGuess', getGuess);
+router.use('/confirmGuess', confirmGuess);
 module.exports = router;
 
-const IDLength = 10;
-const players = [];
-const gameInProgress = false;
+//Range around the target number for different scorings
+const targetRange3Points = 5;
+const targetRange2Points = 10;
+const targetRange1Points = 15;
 
-// Gibt den Index eines Spielers aus dem Players-Array anhand der ID zurück. Wenn kein Spieler mit der ID existiert, wird -1 zurückgegeben.
-function playerIndexByID(ID) {
-    players.map(p => p.id).indexOf(ID);
-    // indexNumber = 0;
+//Indices in the "scalesList", which the psychic can pick from, to choose their prefered scale
+const scaleOneIndex = 0;
+const scaleTwoIndex = 0;
 
-    // players.forEach(player => {
-    //     if (player.id == ID) {
-    //         return indexNumber;
-    //     }
-    //     else if (indexNumber == players.length) {
-    //         return -1;
-    //     }
-    //     else {
-    //         indexNumber += 1;
-    //     }
-    // });
+//Array of all the available scales
+const scalesList = [["Good person", "Bad person"], ["Overrated letter of the alphabet", "Underrated letter of the alphabet"], ["Solid", "Fragile"]];
+
+//Index of the Scale chosen bz the psychic
+const chosenScaleIndex = 0;
+
+//The number on the scale, that gets randomly set
+const targetNumber = 50;
+
+//The word that the psychic chooses, to indicate the right number in the scale
+const theWord = "";
+
+//The last committed number guess
+const currentGuess = 50;
+
+//Gibt random int von inklusive min bis inklusive max zurück
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-function generateID(idLength) { // TO DO: Ganze Funktion austauschen
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-
-    for (var i = 0; i < idLength; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//Responds with with JSON object, that contains strings for the scales and the indices in the scaleList for those scales 
+function getScaleChoice(req, res, next) {
+    scaleOneIndex = getRandomInt(0, scalesList.length);
+    scaleTwoIndex = getRandomInt(0, scalesList.length);
+    if (scalesList.length < 1) {
+        while (scaleOneIndex == scaleTwoIndex) {
+            const choiceTwo = getRandomInt(0, scalesList.length);
+        }
     }
-    if (playerIndexByID(result) >= 0) {
-        result = generateID(idLength);
-    }
-    return result;
-}
-
-function joinGame(req, res, next) {
-    if (gameInProgress) {
-        return;
-    }
-    else if (playerIndexByID(req.ID) >= 0) {
-        return;
-    }
-    else {
-        player = { id: generateID(IDLength), name: "", team: 0 };
-        players.push(player);
-        res.json(player);
-    }
-}
-
-
-function setName(req, res, next) {
-    const newName = ""; // TO DO: neuen Namen aus der Request lesen
-    const reqID = 0; // TO DO: reqID aus Request Header lesen
-    const playerIndex = playerIndexByID(reqID);
-
-    if (gameInProgress) {
-        // response senden
-        return;
-    }
-    if (playerIndex < 0) {
-        // joinGame(req, res, next); <- funktioniert das so?
-    }
-    players[playerIndex][name] = newName;
-}
-
-
-function startGame(req, res, next) {
-    // checken ob schon eine Runde läuft, wenn ja die anfrage ignorieren
-    // Sonst checken, ob mindestens zwei Spieler registriert sind, wenn nicht, dann die anfrage ignorieren
-    // Sonst neue Runde Initialisieren
-    // Score auf 0 setzen
-    // Die spieler in Teams einteilen
-    //Immer abwechselnd Team 1 und Team 2 zuordnen, sonderfall bei zwei oder drei spielern: alle ins gleiche Team
-    // Startspieler festlegen
-    // Skala für erste Runde festlegen
-    // Nummer für erste Runde festlegen
-    // Anzahl der Runden festlegen
-}
-
-function getNumber(req, res, next) {
-    // Aktuell zu erratende Nummer zurückgeben
-}
-
-function setNewWord(req, res, next) {
-    // Wort, dass die entsprechende Zahl auf der Skala beschreiben soll, festlegen
-}
-
-function getWord(req, res, next) {
-    // Festgelegtes Wort der Runde zurückgeben
-    res.json({word: "flubbelbub"});
+    res.json({
+        optionOne: {
+            scale: scalesList[scaleOneIndex],
+            index: scaleOneIndex
+        },
+        optionTwo: {
+            scale: scalesList[scaleTwoIndex],
+            index: scaleTwoIndex
+        }
+    });
     next();
 }
 
+// Wort, dass die entsprechende Zahl auf der Skala beschreiben soll, festlegen
+function setScale(req, res, next) {
+    if (req.data.scaleChoice == scaleOneIndex || req.data.scaleChoice == scaleTwoIndex) {
+        chosenScaleIndex = req.data.scaleChoice;
+    }
+    next();
+}
+
+// Wort, dass die entsprechende Zahl auf der Skala beschreiben soll, festlegen
+function setNewWord(req, res, next) {
+    theWord = String(req.data.word);
+    next();
+}
+
+// Festgelegtes Wort der Runde zurückgeben
+function getWord(req, res, next) {
+    res.json({ word: theWord });
+    next();
+}
+
+// Skala der momentanen Runde anzeigen
 function getScale(req, res, next) {
-    // Skala der momentanen Runde anzeigen
+    res.json({ scale: scalesList[chosenScaleIndex] });
+    next();
 }
 
-function getScores(req, res, next) {
-    // Team Scores zurückgeben
+// Get the last submitted number guessed
+function getGuess(req, res, next) {
+    res.json({ guess: currentGuess});
+    next();
 }
 
-function getPlayers(req, res, next) {
-    // Spielernamen und entsperchendes Team zurückgeben
+// submit a new guessed number
+function setGuess(req, res, next) {
+    currentGuess = req.data.guess;
+    next();
 }
 
-function getRoundNumber(req, res, next) {
-    // Zurückgeben, die wievielte Runde aktuell gespielt wird
-}
-
-function confirmAnswer(req, res, next) {
+function confirmGuess(req, res, next) {
     // Punkte für die Runde daran berechnen, wie dicht die geratene Nummer an der tatsächlichen Nummer war
     // Gesamtscores aktualisieren
     // Anzahl der gespielten Runden aktualisieren
     // Checken ob das Spiel zuende ist (anhand der Rundenzahl)
     // Eventuell das Gewinnerteam bestimmen, Spiel serverseitig als beendet erklären
     // Sonst neue Skala und neue Nummer und neuen Spieler zum Ausdenken des Wortes festlegen
+    if(Math.abs(targetNumber - currentGuess) <= targetRange3Points)
+    {
+        res.send("scored 3 points! The correct guess was:" + String(targetNumber))
+        next();
+    }
+    if(Math.abs(targetNumber - currentGuess) <= targetRange2Points)
+    {
+        res.send("scored 2 points! The correct guess was:" + String(targetNumber))
+        next();
+    }
+    if(Math.abs(targetNumber - currentGuess) <= targetRange1Points)
+    {
+        res.send("scored 1 points! The correct guess was:" + String(targetNumber))
+        next();
+    }
+    else
+    {
+        res.send("scored 0 points! The correct guess was:" + String(targetNumber))
+        next();
+    }
 }
