@@ -79,7 +79,7 @@ import axios from "axios";
 
 export default {
   created() {
-    requestScaleChoice();
+    this.requestScaleChoice();
   },
 
   data() {
