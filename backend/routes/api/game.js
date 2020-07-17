@@ -70,10 +70,11 @@ function getScaleChoice(req, res, next) {
     next();
 }
 
-// Wort, dass die entsprechende Zahl auf der Skala beschreiben soll, festlegen
+// Eine der beiden Skalen auswählen
 function setScale(req, res, next) {
     if (req.data.scaleChoice == scaleOneIndex || req.data.scaleChoice == scaleTwoIndex) {
         chosenScaleIndex = req.data.scaleChoice;
+        res.send("submitted choice successfully");
         targetNumber = getRandomInt(0, 100);
     }
     else {

@@ -11,13 +11,13 @@
             class="mx-8"
             x-large
             color="success"
-            @click="chooseScaleOverlay = false"
+            @click="this.submitScaleChoice(this.scaleChoice.optionOne.index)"
           >{{this.scaleChoice.optionOne.scale}}</v-btn>
           <v-btn
             class="mx-8"
             x-large
             color="success"
-            @click="chooseScaleOverlay = false"
+            @click="this.submitScaleChoice(this.scaleChoice.optionTwo.index)"
           >{{this.scaleChoice.optionTwo.scale}}</v-btn>
         </v-row>
       </v-container>
@@ -60,7 +60,7 @@
                 <v-slider
                   prepend-icon="mdi-numeric-0-box"
                   append-icon="mdi-numeric-10-box"
-                  v-model="guess"
+                  v-model="currentGuess"
                   thumb-label="always"
                   min="0"
                   max="100"
@@ -86,7 +86,7 @@ export default {
     return {
       chooseScaleOverlay: false,
       chooseWordOverlay: false,
-      guess: 50,
+      currentGuess: 50,
       theWord: "",
       scaleChoice: {
         optionOne: { scale: "wating for data..." },
@@ -116,6 +116,15 @@ export default {
       }) <- "this" is not defined. warum geht das nicht?*/
         .catch(err => console.log(err));
       this.chooseScaleOverlay = true;
+    },
+    submitScaleChoice(scaleIndex) {
+      axios
+        .post("http://localhost:8080/api/game/setScaleChoice", {
+          scaleChoice: scaleIndex,
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+      this.chooseScaleOverlay = false;
     }
   }
 };
