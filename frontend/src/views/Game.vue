@@ -7,8 +7,18 @@
           <h1 class="my-10">Choose your Scale</h1>
         </v-row>
         <v-row align="center" justify="center">
-          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false"></v-btn>
-          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false"></v-btn>
+          <v-btn
+            class="mx-8"
+            x-large
+            color="success"
+            @click="chooseScaleOverlay = false"
+          >{{this.scaleChoice.optionOne.scale}}</v-btn>
+          <v-btn
+            class="mx-8"
+            x-large
+            color="success"
+            @click="chooseScaleOverlay = false"
+          >{{this.scaleChoice.optionTwo.scale}}</v-btn>
         </v-row>
       </v-container>
     </v-overlay>
@@ -69,11 +79,7 @@ import axios from "axios";
 
 export default {
   created() {
-    axios
-      .get(`http://localhost:8080/api/game/getScaleChoice`)
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
-    this.chooseScaleOverlay = true;
+    requestScaleChoice();
   },
 
   data() {
@@ -82,7 +88,10 @@ export default {
       chooseWordOverlay: false,
       guess: 50,
       theWord: "",
-      scaleChoice: "",
+      scaleChoice: {
+        optionOne: { scale: "wating for data..." },
+        optionTwo: { scale: "wating for data..." }
+      }
     };
   },
 
@@ -96,6 +105,17 @@ export default {
         .get(`http://localhost:8080/api/game/getWord`)
         .then(res => (this.theWord = res.data.word))
         .catch(err => console.log(err));
+    },
+    requestScaleChoice() {
+      axios
+        .get(`http://localhost:8080/api/game/getScaleChoice`)
+        .then(res => (this.scaleChoice = res.data))
+        /*.then(function(res) {
+        this.scaleChoice = res.data;
+        this.chooseScaleOverlay = true;
+      }) <- "this" is not defined. warum geht das nicht?*/
+        .catch(err => console.log(err));
+      this.chooseScaleOverlay = true;
     }
   }
 };
