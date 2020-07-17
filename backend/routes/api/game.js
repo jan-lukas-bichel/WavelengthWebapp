@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/getNumber', getNumber);
+router.use('/getNumber', getTargetNumber);
 router.use('/setWord', setNewWord);
 router.use('/getWord', getWord);
 router.use('/getScaleChoice', getScaleChoice);
@@ -18,23 +18,23 @@ const targetRange2Points = 10;
 const targetRange1Points = 15;
 
 //Indices in the "scalesList", which the psychic can pick from, to choose their prefered scale
-const scaleOneIndex = 0;
-const scaleTwoIndex = 0;
+var scaleOneIndex = 0;
+var scaleTwoIndex = 0;
 
 //Array of all the available scales
-const scalesList = [["Good person", "Bad person"], ["Overrated letter of the alphabet", "Underrated letter of the alphabet"], ["Solid", "Fragile"]];
+var scalesList = [["Good person", "Bad person"], ["Overrated letter of the alphabet", "Underrated letter of the alphabet"], ["Solid", "Fragile"]];
 
 //Index of the Scale chosen by the psychic
-const chosenScaleIndex = 0;
+var chosenScaleIndex = 0;
 
 //The number on the scale, that gets randomly set
-const targetNumber = 50;
+var targetNumber = 50;
 
 //The word that the psychic chooses, to indicate the right number in the scale
-const theWord = "";
+var theWord = "";
 
 //The last committed number guess
-const currentGuess = 50;
+var currentGuess = 50;
 
 //Gibt random int von inklusive min bis inklusive max zurück
 function getRandomInt(min, max) {
@@ -43,13 +43,18 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getTargetNumber(req, res, next) {
+    res.json({ number: targetNumber });
+    next();
+}
+
 //Responds with with JSON object, that contains strings for the scales and the indices in the scaleList for those scales 
 function getScaleChoice(req, res, next) {
-    scaleOneIndex = getRandomInt(0, scalesList.length);
-    scaleTwoIndex = getRandomInt(0, scalesList.length);
-    if (scalesList.length < 1) {
+    scaleOneIndex = getRandomInt(0, scalesList.length-1);
+    scaleTwoIndex = getRandomInt(0, scalesList.length-1);
+    if (scalesList.length > 1) {
         while (scaleOneIndex == scaleTwoIndex) {
-            const choiceTwo = getRandomInt(0, scalesList.length);
+            scaleTwoIndex = getRandomInt(0, scalesList.length-1);
         }
     }
     res.json({
@@ -69,6 +74,10 @@ function getScaleChoice(req, res, next) {
 function setScale(req, res, next) {
     if (req.data.scaleChoice == scaleOneIndex || req.data.scaleChoice == scaleTwoIndex) {
         chosenScaleIndex = req.data.scaleChoice;
+        targetNumber = getRandomInt(0, 100);
+    }
+    else {
+        console.log("error occured while choosing the scale")
     }
     next();
 }
@@ -93,7 +102,7 @@ function getScale(req, res, next) {
 
 // Get the last submitted number guessed
 function getGuess(req, res, next) {
-    res.json({ guess: currentGuess});
+    res.json({ guess: currentGuess });
     next();
 }
 
@@ -110,23 +119,19 @@ function confirmGuess(req, res, next) {
     // Checken ob das Spiel zuende ist (anhand der Rundenzahl)
     // Eventuell das Gewinnerteam bestimmen, Spiel serverseitig als beendet erklären
     // Sonst neue Skala und neue Nummer und neuen Spieler zum Ausdenken des Wortes festlegen
-    if(Math.abs(targetNumber - currentGuess) <= targetRange3Points)
-    {
+    if (Math.abs(targetNumber - currentGuess) <= targetRange3Points) {
         res.send("scored 3 points! The correct guess was:" + String(targetNumber))
         next();
     }
-    if(Math.abs(targetNumber - currentGuess) <= targetRange2Points)
-    {
+    if (Math.abs(targetNumber - currentGuess) <= targetRange2Points) {
         res.send("scored 2 points! The correct guess was:" + String(targetNumber))
         next();
     }
-    if(Math.abs(targetNumber - currentGuess) <= targetRange1Points)
-    {
+    if (Math.abs(targetNumber - currentGuess) <= targetRange1Points) {
         res.send("scored 1 points! The correct guess was:" + String(targetNumber))
         next();
     }
-    else
-    {
+    else {
         res.send("scored 0 points! The correct guess was:" + String(targetNumber))
         next();
     }

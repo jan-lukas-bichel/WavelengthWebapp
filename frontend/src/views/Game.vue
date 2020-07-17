@@ -7,8 +7,8 @@
           <h1 class="my-10">Choose your Scale</h1>
         </v-row>
         <v-row align="center" justify="center">
-          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false">Option 1</v-btn>
-          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false">Option 2</v-btn>
+          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false"></v-btn>
+          <v-btn class="mx-8" x-large color="success" @click="chooseScaleOverlay = false"></v-btn>
         </v-row>
       </v-container>
     </v-overlay>
@@ -41,7 +41,7 @@
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title>The word is: {{this.theWord}}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn v-on:click.prevent="requestWord"  depressed color="green">Confirm your Choice</v-btn>
+                <v-btn v-on:click.prevent="requestWord" depressed color="green">Confirm your Choice</v-btn>
               </v-toolbar>
               <v-card-text>
                 <v-icon>mdi-account</v-icon>
@@ -65,16 +65,25 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
+  created() {
+    axios
+      .get(`http://localhost:8080/api/game/getScaleChoice`)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err));
+    this.chooseScaleOverlay = true;
+  },
+
   data() {
     return {
-      chooseScaleOverlay: true,
-    chooseWordOverlay: true,
-    guess: 50,
-    theWord: ""
-    }
+      chooseScaleOverlay: false,
+      chooseWordOverlay: false,
+      guess: 50,
+      theWord: "",
+      scaleChoice: "",
+    };
   },
 
   props: {
@@ -84,8 +93,8 @@ export default {
   methods: {
     requestWord() {
       axios
-        .get(`http://localhost:8080/api/game/word`)
-        .then(res => this.theWord = res.data.word)
+        .get(`http://localhost:8080/api/game/getWord`)
+        .then(res => (this.theWord = res.data.word))
         .catch(err => console.log(err));
     }
   }
