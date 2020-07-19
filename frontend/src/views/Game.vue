@@ -30,7 +30,7 @@
           <v-row>
             <v-col>
               <h1>Your Word should be a {{targetNumber}} out of 100 on a Scale from "{{scale[0]}}" to "{{scale[1]}}"</h1>
-              <v-text-field background-color="green" label="Input your word" solo></v-text-field>
+              <v-text-field v-model="theWord" background-color="green" label="Input your word" solo></v-text-field>
               <v-btn
                 class="mx-8"
                 x-large
@@ -147,7 +147,17 @@ export default {
         .get(`http://localhost:8080/api/game/getScale`)
         .then(res => (this.scale = res.data.scale))
         .catch(err => console.log(err));
-    }
+    },
+
+    submitWordChoice() {
+      axios
+        .post("http://localhost:8080/api/game/setWord", {
+          word: this.theWord
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+      this.chooseWordOverlay = false;
+    },
   }
 };
 </script>

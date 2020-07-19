@@ -85,7 +85,8 @@ function setScale(req, res, next) {
 
 // Wort, dass die entsprechende Zahl auf der Skala beschreiben soll, festlegen
 function setNewWord(req, res, next) {
-    theWord = String(req.data.word);
+    theWord = String(req.body.word);
+    res.status(204).send();
     next();
 }
 
