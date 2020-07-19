@@ -72,13 +72,13 @@ function getScaleChoice(req, res, next) {
 
 // Eine der beiden Skalen auswählen
 function setScale(req, res, next) {
-    if (req.data.scaleChoice == scaleOneIndex || req.data.scaleChoice == scaleTwoIndex) {
-        chosenScaleIndex = req.data.scaleChoice;
-        res.send("submitted choice successfully");
+    if (req.body.scaleChoice == scaleOneIndex || req.body.scaleChoice == scaleTwoIndex) {
+        chosenScaleIndex = req.body.scaleChoice;
+        res.status(204).send();
         targetNumber = getRandomInt(0, 100);
     }
     else {
-        console.log("error occured while choosing the scale")
+        res.status(200).send("invalid scale choice");
     }
     next();
 }

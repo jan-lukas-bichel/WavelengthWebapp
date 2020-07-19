@@ -11,13 +11,13 @@
             class="mx-8"
             x-large
             color="success"
-            @click="this.submitScaleChoice(this.scaleChoice.optionOne.index)"
+            @click="submitScaleChoice(scaleChoice.optionOne.index)"
           >{{this.scaleChoice.optionOne.scale}}</v-btn>
           <v-btn
             class="mx-8"
             x-large
             color="success"
-            @click="this.submitScaleChoice(this.scaleChoice.optionTwo.index)"
+            @click="submitScaleChoice(scaleChoice.optionTwo.index)"
           >{{this.scaleChoice.optionTwo.scale}}</v-btn>
         </v-row>
       </v-container>
@@ -120,7 +120,7 @@ export default {
     submitScaleChoice(scaleIndex) {
       axios
         .post("http://localhost:8080/api/game/setScaleChoice", {
-          scaleChoice: scaleIndex,
+          scaleChoice: scaleIndex
         })
         .then(res => console.log(res))
         .catch(err => console.log(err));

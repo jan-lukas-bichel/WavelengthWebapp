@@ -4,7 +4,8 @@ const app = express();
 const port = 3000;
 
 
-// app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 /*app.use((req, res, next) => {
     // if req is nicht erlaubt
     // dann respond with error
