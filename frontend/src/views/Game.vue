@@ -29,6 +29,7 @@
         <v-container>
           <v-row>
             <v-col>
+              <h1>Your Word should be a {{targetNumber}} out of 100 on a Scale from "{{scale[0]}}" to "{{scale[1]}}"</h1>
               <v-text-field background-color="green" label="Input your word" solo></v-text-field>
               <v-btn
                 class="mx-8"
@@ -88,10 +89,12 @@ export default {
       chooseWordOverlay: false,
       currentGuess: 50,
       theWord: "",
+      targetNumber: 50,
+      scale: [],
       scaleChoice: {
         optionOne: { scale: "wating for data..." },
         optionTwo: { scale: "wating for data..." }
-      }
+      },
     };
   },
 
@@ -106,6 +109,7 @@ export default {
         .then(res => (this.theWord = res.data.word))
         .catch(err => console.log(err));
     },
+
     requestScaleChoice() {
       axios
         .get(`http://localhost:8080/api/game/getScaleChoice`)
@@ -117,6 +121,7 @@ export default {
         .catch(err => console.log(err));
       this.chooseScaleOverlay = true;
     },
+
     submitScaleChoice(scaleIndex) {
       axios
         .post("http://localhost:8080/api/game/setScaleChoice", {
@@ -125,6 +130,23 @@ export default {
         .then(res => console.log(res))
         .catch(err => console.log(err));
       this.chooseScaleOverlay = false;
+      this.getTargetNumber();
+      this.getScale();
+      this.chooseWordOverlay = true;
+    },
+
+    getTargetNumber() {
+      axios
+        .get(`http://localhost:8080/api/game/getNumber`)
+        .then(res => (this.targetNumber = res.data.number))
+        .catch(err => console.log(err));
+    },
+
+    getScale(){
+      axios
+        .get(`http://localhost:8080/api/game/getScale`)
+        .then(res => (this.scale = res.data.scale))
+        .catch(err => console.log(err));
     }
   }
 };
