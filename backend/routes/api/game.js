@@ -110,26 +110,21 @@ function getGuess(req, res, next) {
 
 // submit a new guessed number
 function setGuess(req, res, next) {
-    currentGuess = req.data.guess;
+    currentGuess = req.body.guess;
+    res.status(204).send();
     next();
 }
 
 function confirmGuess(req, res, next) {
-    // Punkte für die Runde daran berechnen, wie dicht die geratene Nummer an der tatsächlichen Nummer war
-    // Gesamtscores aktualisieren
-    // Anzahl der gespielten Runden aktualisieren
-    // Checken ob das Spiel zuende ist (anhand der Rundenzahl)
-    // Eventuell das Gewinnerteam bestimmen, Spiel serverseitig als beendet erklären
-    // Sonst neue Skala und neue Nummer und neuen Spieler zum Ausdenken des Wortes festlegen
     if (Math.abs(targetNumber - currentGuess) <= targetRange3Points) {
         res.send("scored 3 points! The correct guess was:" + String(targetNumber))
         next();
     }
-    if (Math.abs(targetNumber - currentGuess) <= targetRange2Points) {
+    else if (Math.abs(targetNumber - currentGuess) <= targetRange2Points) {
         res.send("scored 2 points! The correct guess was:" + String(targetNumber))
         next();
     }
-    if (Math.abs(targetNumber - currentGuess) <= targetRange1Points) {
+    else if (Math.abs(targetNumber - currentGuess) <= targetRange1Points) {
         res.send("scored 1 points! The correct guess was:" + String(targetNumber))
         next();
     }

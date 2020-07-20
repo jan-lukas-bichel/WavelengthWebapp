@@ -55,17 +55,16 @@
                 <v-btn v-on:click.prevent="requestWord" depressed color="green">Confirm your Choice</v-btn>
               </v-toolbar>
               <v-card-text>
-                <v-icon>mdi-account</v-icon>
               </v-card-text>
               <v-card-actions>
+                <p>{{scale[0]}}</p>
                 <v-slider
-                  prepend-icon="mdi-numeric-0-box"
-                  append-icon="mdi-numeric-10-box"
                   v-model="currentGuess"
                   thumb-label="always"
                   min="0"
                   max="100"
                 ></v-slider>
+                <p>{{scale[1]}}</p>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -117,7 +116,7 @@ export default {
         /*.then(function(res) {
         this.scaleChoice = res.data;
         this.chooseScaleOverlay = true;
-      }) <- "this" is not defined. warum geht das nicht?*/
+      }) <- "this" is not defined. warum geht dann mit der arrow syntax?*/
         .catch(err => console.log(err));
       this.chooseScaleOverlay = true;
     },

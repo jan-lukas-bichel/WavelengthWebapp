@@ -1,85 +1,81 @@
-const IDLength = 10;
-const players = [];
-const gameInProgress = false;
+class Player {
+    constructor(name) {
+      this.name = name;
+      this.team = 0;
+      this.psychic = false;
+      this.confirmed = false;
+    }
+  }
+var players = [];
+var scores = [0, 0];
+var gameInProgress = false;
 
-// Gibt den Index eines Spielers aus dem Players-Array anhand der ID zurück. Wenn kein Spieler mit der ID existiert, wird -1 zurückgegeben.
-function playerIndexByID(ID) {
-    players.map(p => p.id).indexOf(ID);
-    // indexNumber = 0;
-
-    // players.forEach(player => {
-    //     if (player.id == ID) {
-    //         return indexNumber;
-    //     }
-    //     else if (indexNumber == players.length) {
-    //         return -1;
-    //     }
-    //     else {
-    //         indexNumber += 1;
-    //     }
-    // });
+function joinLobby(req, res, next) {
+    players.push(new Player(req.body.name));
+    res.json({ playerID: players.length - 1 });
 }
 
+function autoAssignTeam(playerID){
+  var team1Size = 0;
+  var team2Size = 0;
 
-function generateID(idLength) { // TO DO: Ganze Funktion austauschen
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  players.forEach(Player => {
+    if(Player.team == 0){
+      team1Size += 1;
+    }
+    else if (Player.team == 1){
+      team2Size += 1;
+    }   
+  });
 
-    for (var i = 0; i < idLength; i++) {
-        result += characters.charAt(getRandomInt(0, characters.length));
-    }
-    if (playerIndexByID(result) >= 0) {
-        result = generateID(idLength);
-    }
-    return result;
+  if (team1Size > team2Size){
+    players[playerID].team = 2;
+  }
+  else{
+    players[playerID].team = 1;
+  }
 }
 
-function joinGame(req, res, next) {
-    if (gameInProgress) {
+function getPlayersList(req, res, next) {
+  res.json({ playersList: players });
+  next();
+}
+
+function switchTeam(req, res, next) {
+  if(players[req.body.playerID].team == 1)
+  {
+    players[req.body.playerID].team = 2;
+    res.status(204).send();
+  }
+  else if(players[req.body.playerID].team == 2)
+  {
+    players[req.body.playerID].team = 1;
+    res.status(204).send();
+  }
+  next();
+}
+
+function lockTeamChoice(req, res, next){
+  if(!gameInProgress){
+    players[req.body.playerID].confirmed = true;
+    res.status(204).send();
+    players.forEach(Player => {
+      if(Player.confirmed == false){
+        next();
         return;
-    }
-    else if (playerIndexByID(req.ID) >= 0) {
-        return;
-    }
-    else {
-        player = { id: generateID(IDLength), name: "", team: 0 };
-        players.push(player);
-        res.json(player);
-    }
+      }
+    });
+    startGame();
+  }
+  else{
+    joinGame();
+  }
 }
 
+function startGame(){
 
-function setName(req, res, next) {
-    const newName = ""; // TO DO: neuen Namen aus der Request lesen
-    const reqID = 0; // TO DO: reqID aus Request Header lesen
-    const playerIndex = playerIndexByID(reqID);
-
-    if (gameInProgress) {
-        // response senden
-        return;
-    }
-    if (playerIndex < 0) {
-        // joinGame(req, res, next); <- funktioniert das so?
-    }
-    players[playerIndex][name] = newName;
 }
 
+function joinGame(){
 
-function startGame(req, res, next) {
-    // checken ob schon eine Runde läuft, wenn ja die anfrage ignorieren
-    // Sonst checken, ob mindestens zwei Spieler registriert sind, wenn nicht, dann die anfrage ignorieren
-    // Sonst neue Runde Initialisieren
-    // Score auf 0 setzen
-    // Die spieler in Teams einteilen
-    //Immer abwechselnd Team 1 und Team 2 zuordnen, sonderfall bei zwei oder drei spielern: alle ins gleiche Team
-    // Startspieler festlegen
-    // Skala für erste Runde festlegen
-    // Nummer für erste Runde festlegen
-    // Anzahl der Runden festlegen
-}
-
-// Gibt aktuell zu erratende Nummer zurück
-function getNumber(req, res, next) {
-    res.json({number: theNumber});
-    next();
 }
