@@ -12,10 +12,9 @@ router.use('/getGuess', getGuess);
 router.use('/confirmGuess', confirmGuess);
 module.exports = router;
 
-//Range around the target number for different scorings
-const targetRange3Points = 5;
-const targetRange2Points = 10;
-const targetRange1Points = 15;
+var teamScores = [0, 0];
+var activeTeam = 1;
+var psychicPlayerName = "";
 
 //Indices in the "scalesList", which the psychic can pick from, to choose their prefered scale
 var scaleOneIndex = 0;
@@ -115,21 +114,48 @@ function setGuess(req, res, next) {
     next();
 }
 
+function nextPsychic(){
+    //DURCH RICHTIGES ARRAY ERSETZEN 
+    var players = [];
+    var counter = 0;
+
+    players.forEach(player => {
+        if(player.team == activeTeam){
+            if(player.wasPsychic == false){
+                psychicPlayerName = player.name;
+                return;
+            }
+            counter += 1;
+        }
+        else{
+            players.forEach(player => {
+                player.wasPsychic = false;
+            });
+            nextPsychic();
+        }
+    });
+}
+
+function evaluateScore(){
+    var score = 30 - Math.abs(targetNumber - currentGuess);
+    if(score < 0)
+    {
+        score = 0;
+    }
+    return score;
+}
+
 function confirmGuess(req, res, next) {
-    if (Math.abs(targetNumber - currentGuess) <= targetRange3Points) {
-        res.send("scored 3 points! The correct guess was:" + String(targetNumber))
+    res.send("scored" + String(evaluateScore()) + "points! \n The correct guess was:" + String(targetNumber)) + "\n Yout guessed: " + String(currentGuess);
         next();
+
+    if(activeTeam == 1)
+    {
+        activeTeam = 2;
     }
-    else if (Math.abs(targetNumber - currentGuess) <= targetRange2Points) {
-        res.send("scored 2 points! The correct guess was:" + String(targetNumber))
-        next();
+    else
+    {
+        activeTeam = 1;
     }
-    else if (Math.abs(targetNumber - currentGuess) <= targetRange1Points) {
-        res.send("scored 1 points! The correct guess was:" + String(targetNumber))
-        next();
-    }
-    else {
-        res.send("scored 0 points! The correct guess was:" + String(targetNumber))
-        next();
-    }
+    nextPsychic();
 }

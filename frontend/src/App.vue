@@ -4,7 +4,7 @@
       <v-toolbar-title>On a Scale of Ten: The Game</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn light>
-        <router-link to="/">Home</router-link>
+        <router-link to="/lobby">Lobby</router-link>
       </v-btn>
       <v-btn light>
         <router-link to="/game">Game</router-link>
